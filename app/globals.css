@@ -259,7 +259,7 @@ a{text-decoration:none;color:inherit;}
 .ftb-icon{font-size:1.75rem;flex-shrink:0;}
 .ftb-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;color:var(--text-accent);margin-bottom:.2rem;}
 .ftb-sub{font-family:'DM Sans',sans-serif;font-size:.8rem;color:var(--text-secondary);}
-.contact-form-card{padding:2.5rem;}
+.contact-form-card{padding:1.5rem;}
 .cfc-header{margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--glass-border);}
 .cfc-header h3{font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text-accent);margin-bottom:.5rem;}
 .cfc-header p{font-family:'DM Sans',sans-serif;color:var(--text-secondary);font-size:.9rem;line-height:1.6;}

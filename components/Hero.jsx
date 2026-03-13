@@ -123,7 +123,7 @@ export default function Hero() {
         {/* Name with Glitch */}
         <div style={{ position: 'relative', marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <h1 style={{
-            fontSize: 'clamp(3rem, 10vw, 7rem)',
+            fontSize: 'clamp(2rem, 10vw, 7rem)',
             fontWeight: 800,
             fontFamily: "'Syne', sans-serif",
             color: 'var(--text-accent)',
@@ -135,7 +135,7 @@ export default function Hero() {
             Muhammad
           </h1>
           <h1 style={{
-            fontSize: 'clamp(3rem, 10vw, 7rem)',
+            fontSize: 'clamp(2rem, 10vw, 7rem)',
             fontWeight: 800,
             fontFamily: "'Syne', sans-serif",
             color: 'transparent',
