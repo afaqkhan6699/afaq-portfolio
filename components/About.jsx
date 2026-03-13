@@ -31,7 +31,7 @@ export default function About() {
           <div className="section-label">01 — Who I Am</div>
           <h2 className="section-title" style={{ marginBottom: '1.5rem' }}>About Me</h2>
           <p style={{ fontFamily: "'DM Sans', sans-serif", color: 'var(--text-secondary)', lineHeight: 1.8, fontSize: '1rem', marginBottom: '1.25rem' }}>
-            I'm <strong style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Muhammad Afaq</strong>, a WordPress Developer and Website Designer based in Pakistan with over 2 years of hands-on experience crafting performant, pixel-perfect digital experiences.
+            I&apos;m <strong style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Muhammad Afaq</strong>, a WordPress Developer and Website Designer based in Pakistan with over 2 years of hands-on experience crafting performant, pixel-perfect digital experiences.
           </p>
           <p style={{ fontFamily: "'DM Sans', sans-serif", color: 'var(--text-secondary)', lineHeight: 1.8, fontSize: '1rem', marginBottom: '1.25rem' }}>
             I specialize in custom WordPress theme development, speed optimization, and building sophisticated sites with Elementor and Bricks Builder. My goal is always to deliver websites that&apos;s fast, clean, and built to last.

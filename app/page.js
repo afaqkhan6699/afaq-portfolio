@@ -26,7 +26,7 @@ export default function Home() {
           <div className="container" style={{ textAlign: 'center' }}>
             <span className="section-label">06 — Portfolio</span>
             <h2 className="section-title" style={{ marginBottom: '1rem' }}>Featured Projects</h2>
-            <p className="section-subtitle">A selection of WordPress sites, custom themes, and web applications I've built for clients worldwide.</p>
+            <p className="section-subtitle">A selection of WordPress sites, custom themes, and web applications I&apos;ve built for clients worldwide.</p>
             <div className="title-line" style={{ marginBottom: '3rem' }} />
             <a href="/projects" className="btn-primary" style={{ display: 'inline-flex' }}>View All Projects →</a>
           </div>

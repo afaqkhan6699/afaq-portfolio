@@ -4,11 +4,6 @@
   "installCommand": "npm ci",
   "framework": "nextjs",
   "env": {},
-  "functions": {
-    "api/**/*.js": {
-      "maxDuration": 60
-    }
-  },
   "headers": [
     {
       "source": "/api/(.*)",

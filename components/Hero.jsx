@@ -10,15 +10,16 @@ const PARTICLES = Array.from({ length: 40 }, (_, i) => ({
   delay: Math.random() * 5,
 }));
 
+const ROLES = ['WordPress Developer', 'Website Designer', 'Theme Builder', 'Frontend Developer'];
+
 export default function Hero() {
   const [typed, setTyped] = useState('');
-  const roles = ['WordPress Developer', 'Website Designer', 'Theme Builder', 'Frontend Developer'];
   const [roleIdx, setRoleIdx] = useState(0);
   const [charIdx, setCharIdx] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
-    const current = roles[roleIdx];
+    const current = ROLES[roleIdx];
     const timeout = setTimeout(() => {
       if (!deleting) {
         if (charIdx < current.length) {
@@ -33,12 +34,12 @@ export default function Hero() {
           setCharIdx(c => c - 1);
         } else {
           setDeleting(false);
-          setRoleIdx(r => (r + 1) % roles.length);
+          setRoleIdx(r => (r + 1) % ROLES.length);
         }
       }
     }, deleting ? 60 : 100);
     return () => clearTimeout(timeout);
-  }, [charIdx, deleting, roleIdx, roles]);
+  }, [charIdx, deleting, roleIdx]);
 
   return (
     <section id="hero" style={{
@@ -158,7 +159,7 @@ export default function Hero() {
           minHeight: '2rem',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px',
         }}>
-          <span style={{ color: 'var(--text-secondary)', marginRight: '0.5rem' }}>//</span>
+          <span style={{ color: 'var(--text-secondary)', marginRight: '0.5rem' }}>{'//'}</span>
           <span style={{ color: 'var(--text-primary)' }}>{typed}</span>
           <span style={{ animation: 'blink 1s infinite', color: 'var(--text-accent)' }}>|</span>
         </div>
