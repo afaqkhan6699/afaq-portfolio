@@ -34,7 +34,7 @@ export default function About() {
             I'm <strong style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Muhammad Afaq</strong>, a WordPress Developer and Website Designer based in Pakistan with over 2 years of hands-on experience crafting performant, pixel-perfect digital experiences.
           </p>
           <p style={{ fontFamily: "'DM Sans', sans-serif", color: 'var(--text-secondary)', lineHeight: 1.8, fontSize: '1rem', marginBottom: '1.25rem' }}>
-            I specialize in custom WordPress theme development, speed optimization, and building sophisticated sites with Elementor and Bricks Builder. My goal is always to deliver websites that are fast, clean, and built to last.
+            I specialize in custom WordPress theme development, speed optimization, and building sophisticated sites with Elementor and Bricks Builder. My goal is always to deliver websites that&apos;s fast, clean, and built to last.
           </p>
           <p style={{ fontFamily: "'DM Sans', sans-serif", color: 'var(--text-secondary)', lineHeight: 1.8, fontSize: '1rem' }}>
             Holding a BS in Software Engineering from Abasyn University and multiple Coursera certifications, I bring both academic rigor and real-world freelance experience to every project.

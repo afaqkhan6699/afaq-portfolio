@@ -21,9 +21,9 @@ export default function Contact() {
     <section id="contact" ref={ref} style={{ padding: '7rem 2rem 4rem', maxWidth: '800px', margin: '0 auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '4rem', opacity: vis ? 1 : 0, transform: vis ? 'none' : 'translateY(20px)', transition: 'all 0.6s ease' }}>
         <div className="section-label">06 — Connect</div>
-        <h2 className="section-title">Let's Build Together</h2>
+        <h2 className="section-title">Let&apos;s Build Together</h2>
         <p style={{ fontFamily: "'DM Sans', sans-serif", color: 'var(--text-secondary)', maxWidth: '480px', margin: '1.5rem auto 0', lineHeight: 1.7, fontSize: '1rem' }}>
-          Looking for a dedicated WordPress developer? I'm available for freelance projects, collaborations, and full-time opportunities.
+          Looking for a dedicated WordPress developer? I&apos;m available for freelance projects, collaborations, and full-time opportunities.
         </p>
       </div>
 
@@ -57,7 +57,7 @@ export default function Contact() {
         marginBottom: '4rem',
       }}>
         <p style={{ fontFamily: "'Space Mono', monospace", fontSize: '0.7rem', letterSpacing: '0.2em', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '1rem' }}>
-          When I'm Not Coding
+          When I&apos;m Not Coding
         </p>
         <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           {['📚 Reading Books', '🎮 Playing Games'].map((h, i) => (

@@ -38,7 +38,7 @@ export default function Hero() {
       }
     }, deleting ? 60 : 100);
     return () => clearTimeout(timeout);
-  }, [charIdx, deleting, roleIdx]);
+  }, [charIdx, deleting, roleIdx, roles]);
 
   return (
     <section id="hero" style={{

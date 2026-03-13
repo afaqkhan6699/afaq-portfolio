@@ -39,7 +39,7 @@ export default function Home() {
               <div className="cta-card-inner">
                 <div>
                   <h2 className="cta-title">Ready to build something great?</h2>
-                  <p className="cta-sub">Let's discuss your project. I'm available for freelance work.</p>
+                  <p className="cta-sub">Let&apos;s discuss your project. I&apos;m available for freelance work.</p>
                 </div>
                 <div className="cta-actions">
                   <a href="/contact" className="btn-primary">Start a Project →</a>

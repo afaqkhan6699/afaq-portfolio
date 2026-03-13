@@ -75,7 +75,7 @@ function HireForm() {
     <div className="glass-card contact-form-card">
       <div className="cfc-header">
         <h3>💼 Hiring Inquiry</h3>
-        <p>Looking for a WordPress developer to join your team? Fill this out and I'll reply via WhatsApp.</p>
+        <p>Looking for a WordPress developer to join your team? Fill this out and I&apos;ll reply via WhatsApp.</p>
       </div>
       <div>
         <div className="cf-two-col">
@@ -127,7 +127,7 @@ function ProjectForm() {
     <div className="glass-card contact-form-card">
       <div className="cfc-header">
         <h3>🚀 Project Brief</h3>
-        <p>Need a custom WordPress site, theme, or web app? Share your project details and let's make it happen.</p>
+        <p>Need a custom WordPress site, theme, or web app? Share your project details and let&apos;s make it happen.</p>
       </div>
       <div>
         <div className="cf-two-col">
@@ -201,7 +201,7 @@ export default function ContactPage() {
         <div className="page-hero-content">
           <div className="hero-badge"><span className="badge-dot green" /><span>Available for Work</span></div>
           <h1 className="page-hero-title">Get In <span className="outline-text">Touch</span></h1>
-          <p className="page-hero-sub">Whether you need a WordPress site, custom theme, or performance optimization — let's make it happen.</p>
+          <p className="page-hero-sub">Whether you need a WordPress site, custom theme, or performance optimization — let&apos;s make it happen.</p>
         </div>
       </section>
 
@@ -214,7 +214,7 @@ export default function ContactPage() {
             <div style={{ opacity: vis ? 1 : 0, transform: vis ? 'none' : 'translateX(-20px)', transition: 'all 0.6s ease' }}>
               <span className="section-label">Direct Contact</span>
               <h2 className="cip-title">Reach Me Directly</h2>
-              <p className="cip-sub">Prefer to reach out yourself? Here's where to find me. I typically respond within a few hours.</p>
+              <p className="cip-sub">Prefer to reach out yourself? Here&apos;s where to find me. I typically respond within a few hours.</p>
 
               <div className="cip-items">
                 {[
