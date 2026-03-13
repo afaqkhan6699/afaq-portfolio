@@ -300,9 +300,38 @@ a{text-decoration:none;color:inherit;}
   .cta-card{padding:1.75rem;} .cta-card-inner{flex-direction:column;text-align:center;}
   .page-hero-stats{gap:1.25rem;} .ph-stat-divider{display:none;}
   .footer-inner{flex-direction:column;align-items:flex-start;}
+
+  /* Global mobile spacing tighten-up, including inline-styled sections */
+  .container,.container-narrow{padding:0 1rem;}
+  #hero{padding:6rem 1rem 2.5rem !important;}
+  #about,#skills,#experience,#education{padding:4rem 1rem !important;}
+  #contact{padding:4rem 1rem 2.5rem !important;}
+  .page-hero{padding:6rem 1rem 2.5rem;min-height:48vh;}
+  .projects-main-section{padding:3.5rem 0 4.5rem;}
+  .contact-info-section{padding:3.5rem 0;}
+  .contact-form-section{padding:2.25rem 0 4.5rem;}
+  .cta-strip{padding:2.5rem 0;}
+
+  .section-header{margin-bottom:2rem;}
+  .project-filters{margin-bottom:2rem;}
+  .timeline-item{padding-left:1.75rem;margin-bottom:2rem;}
+  .exp-card,.skill-card,.edu-timeline-card{padding:1.25rem 1rem !important;}
+  .cip-item,.availability-card,.social-link-card{padding:1rem !important;}
+  .contact-form-card{padding:1.1rem;}
+  .form-tabs{gap:.75rem;margin-bottom:1.5rem;}
+  .form-tab-btn{padding:1rem 1.1rem;}
 }
 @media(max-width:480px){
   .cf-checkboxes{grid-template-columns:1fr;}
   .projects-grid{grid-template-columns:1fr;}
   .form-tab-btn{min-width:unset;}
+
+  .container,.container-narrow{padding:0 .8rem;}
+  #hero{padding:5.5rem .8rem 2rem !important;}
+  #about,#skills,#experience,#education{padding:3.25rem .8rem !important;}
+  #contact{padding:3.25rem .8rem 2rem !important;}
+  .page-hero{padding:5.5rem .8rem 2rem;}
+  .cta-card{padding:1.1rem !important;}
+  .footer-inner{padding:1.5rem .8rem 1rem;}
+  .footer-bottom{padding:1rem .8rem;}
 }
