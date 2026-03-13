@@ -38,8 +38,10 @@ function ProjectCard({ project, visible }) {
       style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(20px)', transition: 'all 0.5s ease' }}>
       <div className="pc-image">
         {project.image ? (
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }} />
+          </>
         ) : (
           <div className="pc-placeholder"><span>{project.label}</span><div className="pc-shimmer" /></div>
         )}
