@@ -26,11 +26,41 @@ function toast(msg) {
   setTimeout(() => t.remove(), 4500);
 }
 
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+function isValidEmail(value) {
+  return EMAIL_RE.test(value.trim());
+}
+
+function isValidUrl(value) {
+  try {
+    const u = new URL(value.trim());
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
 function Input({ id, label, req, type='text', placeholder, value, onChange }) {
+  const handleChange = (e) => {
+    const raw = e.target.value;
+    const next = type === 'tel' ? raw.replace(/\D/g, '') : raw;
+    onChange(next);
+  };
+
   return (
     <div className="cf-group">
       <label className="cf-label">{label} {req && <span className="cf-req">*</span>}</label>
-      <input id={id} type={type} className="cf-input" placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)} />
+      <input
+        id={id}
+        type={type}
+        className="cf-input"
+        placeholder={placeholder}
+        value={value}
+        onChange={handleChange}
+        inputMode={type === 'tel' ? 'numeric' : undefined}
+        pattern={type === 'tel' ? '[0-9]*' : undefined}
+      />
     </div>
   );
 }
@@ -60,6 +90,8 @@ function HireForm() {
 
   const send = () => {
     if (!f.name || !f.phone || !f.role || !f.message) return toast('Please fill in all required fields (Name, Phone, Role, Description).');
+    if (f.phone.length < 7) return toast('Please enter a valid phone number.');
+    if (f.email && !isValidEmail(f.email)) return toast('Please enter a valid email address.');
     const lines = ['👋 *HIRING INQUIRY — afaq-portfolio.com*','━━━━━━━━━━━━━━━━━━',
       `👤 *Name:* ${f.name}`, `📱 *Phone/WhatsApp:* ${f.phone}`,
       f.email && `📧 *Email:* ${f.email}`, f.company && `🏢 *Company:* ${f.company}`,
@@ -110,6 +142,9 @@ function ProjectForm() {
 
   const send = () => {
     if (!f.name || !f.phone || !f.type || !f.budget || !f.desc) return toast('Please fill in all required fields (Name, Phone, Project Type, Budget, Description).');
+    if (f.phone.length < 7) return toast('Please enter a valid phone number.');
+    if (f.email && !isValidEmail(f.email)) return toast('Please enter a valid email address.');
+    if (f.website && !isValidUrl(f.website)) return toast('Please enter a valid website URL (http or https).');
     const lines = ['🚀 *PROJECT BRIEF — afaq-portfolio.com*','━━━━━━━━━━━━━━━━━━',
       `👤 *Client:* ${f.name}`, `📱 *WhatsApp:* ${f.phone}`,
       f.email && `📧 *Email:* ${f.email}`, f.website && `🌐 *Website:* ${f.website}`,

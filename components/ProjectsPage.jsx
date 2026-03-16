@@ -32,9 +32,8 @@ const FILTERS = [
 ];
 
 function ProjectCard({ project, visible }) {
-  const [hovered, setHovered] = useState(false);
   return (
-    <div className="glass-card project-card" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+    <div className="glass-card project-card"
       style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(20px)', transition: 'all 0.5s ease' }}>
       <div className="pc-image">
         {project.image ? (
@@ -45,9 +44,6 @@ function ProjectCard({ project, visible }) {
         ) : (
           <div className="pc-placeholder"><span>{project.label}</span><div className="pc-shimmer" /></div>
         )}
-        <div className="pc-overlay">
-          <a href="#" className="pc-view-btn" onClick={e => e.preventDefault()}>View Live ↗</a>
-        </div>
       </div>
       <div className="pc-body">
         <div className="pc-header">
