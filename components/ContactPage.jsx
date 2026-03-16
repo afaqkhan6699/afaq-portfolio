@@ -27,6 +27,20 @@ function toast(msg) {
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const PHONE_RE = /^\+?[\d\s]{7,20}$/;
+
+function sanitizePhone(value) {
+  const startsWithPlus = /^\s*\+/.test(value);
+  const digitsAndSpaces = value.replace(/[^\d\s]/g, '').replace(/\s{2,}/g, ' ');
+  return `${startsWithPlus ? '+' : ''}${digitsAndSpaces.replace(/^\s+/, '')}`;
+}
+
+function isValidPhone(value) {
+  const trimmed = value.trim();
+  if (!PHONE_RE.test(trimmed)) return false;
+  const digits = trimmed.replace(/\D/g, '');
+  return digits.length >= 7 && digits.length <= 15;
+}
 
 function isValidEmail(value) {
   return EMAIL_RE.test(value.trim());
@@ -35,16 +49,16 @@ function isValidEmail(value) {
 function isValidUrl(value) {
   try {
     const u = new URL(value.trim());
-    return u.protocol === 'http:' || u.protocol === 'https:';
+    return (u.protocol === 'http:' || u.protocol === 'https:') && u.hostname.includes('.');
   } catch {
     return false;
   }
 }
 
-function Input({ id, label, req, type='text', placeholder, value, onChange }) {
+function Input({ id, label, req, type='text', placeholder, value, onChange, onBlur, error }) {
   const handleChange = (e) => {
     const raw = e.target.value;
-    const next = type === 'tel' ? raw.replace(/\D/g, '') : raw;
+    const next = type === 'tel' ? sanitizePhone(raw) : raw;
     onChange(next);
   };
 
@@ -58,40 +72,76 @@ function Input({ id, label, req, type='text', placeholder, value, onChange }) {
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
-        inputMode={type === 'tel' ? 'numeric' : undefined}
-        pattern={type === 'tel' ? '[0-9]*' : undefined}
+        onBlur={onBlur}
+        aria-invalid={Boolean(error)}
+        inputMode={type === 'tel' ? 'tel' : type === 'url' ? 'url' : undefined}
+        pattern={type === 'tel' ? '^\+?[0-9\s]{7,20}$' : type === 'email' ? '^[^\s@]+@[^\s@]+\.[^\s@]{2,}$' : type === 'url' ? '^https?:\/\/.+' : undefined}
+        style={error ? { borderColor: '#ef4444' } : undefined}
       />
+      {error && <p style={{ color: '#ef4444', fontSize: '.78rem', marginTop: '.35rem' }}>{error}</p>}
     </div>
   );
 }
-function Select({ id, label, req, options, value, onChange }) {
+function Select({ id, label, req, options, value, onChange, onBlur, error }) {
   return (
     <div className="cf-group">
       <label className="cf-label">{label} {req && <span className="cf-req">*</span>}</label>
-      <select id={id} className="cf-select" value={value} onChange={e => onChange(e.target.value)}>
+      <select id={id} className="cf-select" value={value} onChange={e => onChange(e.target.value)} onBlur={onBlur} aria-invalid={Boolean(error)} style={error ? { borderColor: '#ef4444' } : undefined}>
         <option value="">Select...</option>
         {options.map(o => <option key={o} value={o}>{o}</option>)}
       </select>
+      {error && <p style={{ color: '#ef4444', fontSize: '.78rem', marginTop: '.35rem' }}>{error}</p>}
     </div>
   );
 }
-function Textarea({ id, label, req, rows=5, placeholder, value, onChange }) {
+function Textarea({ id, label, req, rows=5, placeholder, value, onChange, onBlur, error }) {
   return (
     <div className="cf-group">
       <label className="cf-label">{label} {req && <span className="cf-req">*</span>}</label>
-      <textarea id={id} className="cf-textarea" rows={rows} placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)} />
+      <textarea id={id} className="cf-textarea" rows={rows} placeholder={placeholder} value={value} onChange={e => onChange(e.target.value)} onBlur={onBlur} aria-invalid={Boolean(error)} style={error ? { borderColor: '#ef4444' } : undefined} />
+      {error && <p style={{ color: '#ef4444', fontSize: '.78rem', marginTop: '.35rem' }}>{error}</p>}
     </div>
   );
 }
 
 function HireForm() {
   const [f, setF] = useState({ name:'', phone:'', email:'', company:'', role:'', salary:'', message:'', source:'' });
-  const set = k => v => setF(p => ({ ...p, [k]: v }));
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
+
+  const validateField = (key, value) => {
+    const v = value?.trim() || '';
+    if (key === 'name' && !v) return 'Name is required.';
+    if (key === 'phone') {
+      if (!v) return 'Phone / WhatsApp is required.';
+      if (!isValidPhone(v)) return 'Enter a valid phone number (digits, spaces, optional +).';
+    }
+    if (key === 'role' && !v) return 'Please select a role.';
+    if (key === 'message' && !v) return 'Job description is required.';
+    if (key === 'email' && v && !isValidEmail(v)) return 'Please enter a valid email address.';
+    return '';
+  };
+
+  const setField = (key) => (value) => {
+    setF((p) => ({ ...p, [key]: value }));
+    if (touched[key]) setErrors((p) => ({ ...p, [key]: validateField(key, value) }));
+  };
+
+  const handleBlur = (key) => () => {
+    setTouched((p) => ({ ...p, [key]: true }));
+    setErrors((p) => ({ ...p, [key]: validateField(key, f[key]) }));
+  };
 
   const send = () => {
-    if (!f.name || !f.phone || !f.role || !f.message) return toast('Please fill in all required fields (Name, Phone, Role, Description).');
-    if (f.phone.length < 7) return toast('Please enter a valid phone number.');
-    if (f.email && !isValidEmail(f.email)) return toast('Please enter a valid email address.');
+    const keysToCheck = ['name', 'phone', 'email', 'role', 'message'];
+    const nextErrors = keysToCheck.reduce((acc, key) => ({ ...acc, [key]: validateField(key, f[key]) }), {});
+    const hasErrors = Object.values(nextErrors).some(Boolean);
+
+    setErrors(nextErrors);
+    setTouched((p) => ({ ...p, name: true, phone: true, email: true, role: true, message: true }));
+
+    if (hasErrors) return;
+
     const lines = ['👋 *HIRING INQUIRY — afaq-portfolio.com*','━━━━━━━━━━━━━━━━━━',
       `👤 *Name:* ${f.name}`, `📱 *Phone/WhatsApp:* ${f.phone}`,
       f.email && `📧 *Email:* ${f.email}`, f.company && `🏢 *Company:* ${f.company}`,
@@ -111,19 +161,19 @@ function HireForm() {
       </div>
       <div>
         <div className="cf-two-col">
-          <Input id="h1" label="Full Name" req placeholder="e.g. John Smith" value={f.name} onChange={set('name')} />
-          <Input id="h2" label="Phone / WhatsApp" req type="tel" placeholder="+1 234 567 8900" value={f.phone} onChange={set('phone')} />
+          <Input id="h1" label="Full Name" req placeholder="e.g. John Smith" value={f.name} onChange={setField('name')} onBlur={handleBlur('name')} error={errors.name} />
+          <Input id="h2" label="Phone / WhatsApp" req type="tel" placeholder="+1 234 567 8900" value={f.phone} onChange={setField('phone')} onBlur={handleBlur('phone')} error={errors.phone} />
         </div>
         <div className="cf-two-col">
-          <Input id="h3" label="Email" type="email" placeholder="john@company.com" value={f.email} onChange={set('email')} />
-          <Input id="h4" label="Company / Organization" placeholder="Company (optional)" value={f.company} onChange={set('company')} />
+          <Input id="h3" label="Email" type="email" placeholder="john@company.com" value={f.email} onChange={setField('email')} onBlur={handleBlur('email')} error={errors.email} />
+          <Input id="h4" label="Company / Organization" placeholder="Company (optional)" value={f.company} onChange={setField('company')} />
         </div>
         <div className="cf-two-col">
-          <Select id="h5" label="Role / Position" req value={f.role} onChange={set('role')} options={['Full-time WordPress Developer','Part-time / Remote Developer','Freelance – Project Basis','Contract (3–6 Months)','Internship / Junior Role','Other']} />
-          <Input id="h6" label="Offered Budget / Salary" placeholder="e.g. $500/mo" value={f.salary} onChange={set('salary')} />
+          <Select id="h5" label="Role / Position" req value={f.role} onChange={setField('role')} onBlur={handleBlur('role')} error={errors.role} options={['Full-time WordPress Developer','Part-time / Remote Developer','Freelance – Project Basis','Contract (3–6 Months)','Internship / Junior Role','Other']} />
+          <Input id="h6" label="Offered Budget / Salary" placeholder="e.g. $500/mo" value={f.salary} onChange={setField('salary')} />
         </div>
-        <Textarea id="h7" label="Job Description / Requirements" req placeholder="Describe the role, required skills, working hours..." value={f.message} onChange={set('message')} />
-        <Select id="h8" label="How did you find me?" value={f.source} onChange={set('source')} options={['Google Search','LinkedIn','Fiverr','Upwork','Referral from someone','Other']} />
+        <Textarea id="h7" label="Job Description / Requirements" req placeholder="Describe the role, required skills, working hours..." value={f.message} onChange={setField('message')} onBlur={handleBlur('message')} error={errors.message} />
+        <Select id="h8" label="How did you find me?" value={f.source} onChange={setField('source')} options={['Google Search','LinkedIn','Fiverr','Upwork','Referral from someone','Other']} />
         <button className="btn-whatsapp-submit" onClick={send}>{WA_BTN_ICON} Send Hiring Inquiry via WhatsApp</button>
         <p className="cf-note">Opens WhatsApp with a pre-filled message — your info goes directly to Muhammad Afaq.</p>
       </div>
@@ -134,17 +184,44 @@ function HireForm() {
 function ProjectForm() {
   const [f, setF] = useState({ name:'', phone:'', email:'', website:'', type:'', budget:'', timeline:'', pages:'', desc:'', design:'' });
   const [features, setFeatures] = useState([]);
-  const set = k => v => setF(p => ({ ...p, [k]: v }));
+  const [errors, setErrors] = useState({});
 
   const toggleFeature = val => setFeatures(prev => prev.includes(val) ? prev.filter(x => x !== val) : [...prev, val]);
+
+  const validateField = (key, value) => {
+    const v = value?.trim() || '';
+    if (key === 'name' && !v) return 'Full name is required.';
+    if (key === 'phone') {
+      if (!v) return 'WhatsApp number is required.';
+      if (!isValidPhone(v)) return 'Enter a valid phone number (digits, spaces, optional +).';
+    }
+    if (key === 'type' && !v) return 'Project type is required.';
+    if (key === 'budget' && !v) return 'Estimated budget is required.';
+    if (key === 'desc' && !v) return 'Project description is required.';
+    if (key === 'email' && v && !isValidEmail(v)) return 'Please enter a valid email address.';
+    if (key === 'website' && v && !isValidUrl(v)) return 'Please enter a valid URL (http or https).';
+    return '';
+  };
+
+  const setField = (key) => (value) => {
+    setF((p) => ({ ...p, [key]: value }));
+    setErrors((p) => ({ ...p, [key]: validateField(key, value) }));
+  };
+
+  const handleBlur = (key) => () => {
+    setErrors((p) => ({ ...p, [key]: validateField(key, f[key]) }));
+  };
 
   const FEATURE_LIST = ['Responsive / Mobile','E-Commerce','Contact Form','Blog / News','SEO Setup','Speed Optimization','Multilingual','Membership Area','Booking System','Custom Post Types','Payment Gateway','API Integration'];
 
   const send = () => {
-    if (!f.name || !f.phone || !f.type || !f.budget || !f.desc) return toast('Please fill in all required fields (Name, Phone, Project Type, Budget, Description).');
-    if (f.phone.length < 7) return toast('Please enter a valid phone number.');
-    if (f.email && !isValidEmail(f.email)) return toast('Please enter a valid email address.');
-    if (f.website && !isValidUrl(f.website)) return toast('Please enter a valid website URL (http or https).');
+    const keysToCheck = ['name', 'phone', 'email', 'website', 'type', 'budget', 'desc'];
+    const nextErrors = keysToCheck.reduce((acc, key) => ({ ...acc, [key]: validateField(key, f[key]) }), {});
+    const hasErrors = Object.values(nextErrors).some(Boolean);
+
+    setErrors(nextErrors);
+    if (hasErrors) return;
+
     const lines = ['🚀 *PROJECT BRIEF — afaq-portfolio.com*','━━━━━━━━━━━━━━━━━━',
       `👤 *Client:* ${f.name}`, `📱 *WhatsApp:* ${f.phone}`,
       f.email && `📧 *Email:* ${f.email}`, f.website && `🌐 *Website:* ${f.website}`,
@@ -166,20 +243,20 @@ function ProjectForm() {
       </div>
       <div>
         <div className="cf-two-col">
-          <Input id="p1" label="Full Name" req placeholder="e.g. Sarah Johnson" value={f.name} onChange={set('name')} />
-          <Input id="p2" label="WhatsApp Number" req type="tel" placeholder="+1 234 567 8900" value={f.phone} onChange={set('phone')} />
+          <Input id="p1" label="Full Name" req placeholder="e.g. Sarah Johnson" value={f.name} onChange={setField('name')} onBlur={handleBlur('name')} error={errors.name} />
+          <Input id="p2" label="WhatsApp Number" req type="tel" placeholder="+1 234 567 8900" value={f.phone} onChange={setField('phone')} onBlur={handleBlur('phone')} error={errors.phone} />
         </div>
         <div className="cf-two-col">
-          <Input id="p3" label="Email" type="email" placeholder="sarah@company.com" value={f.email} onChange={set('email')} />
-          <Input id="p4" label="Website URL (if redesign)" type="url" placeholder="https://yoursite.com" value={f.website} onChange={set('website')} />
+          <Input id="p3" label="Email" type="email" placeholder="sarah@company.com" value={f.email} onChange={setField('email')} onBlur={handleBlur('email')} error={errors.email} />
+          <Input id="p4" label="Website URL (if redesign)" type="url" placeholder="https://yoursite.com" value={f.website} onChange={setField('website')} onBlur={handleBlur('website')} error={errors.website} />
         </div>
         <div className="cf-two-col">
-          <Select id="p5" label="Project Type" req value={f.type} onChange={set('type')} options={['New WordPress Website','WordPress Redesign / Revamp','WooCommerce E-Commerce Store','Custom WordPress Theme','Landing Page','Speed Optimization','Bug Fixing / Maintenance','PSD / Figma to WordPress','Custom Plugin Development','Other']} />
-          <Select id="p6" label="Estimated Budget" req value={f.budget} onChange={set('budget')} options={['Under $200','$200 – $500','$500 – $1,000','$1,000 – $2,500','$2,500 – $5,000','$5,000+','To be discussed']} />
+          <Select id="p5" label="Project Type" req value={f.type} onChange={setField('type')} onBlur={handleBlur('type')} error={errors.type} options={['New WordPress Website','WordPress Redesign / Revamp','WooCommerce E-Commerce Store','Custom WordPress Theme','Landing Page','Speed Optimization','Bug Fixing / Maintenance','PSD / Figma to WordPress','Custom Plugin Development','Other']} />
+          <Select id="p6" label="Estimated Budget" req value={f.budget} onChange={setField('budget')} onBlur={handleBlur('budget')} error={errors.budget} options={['Under $200','$200 – $500','$500 – $1,000','$1,000 – $2,500','$2,500 – $5,000','$5,000+','To be discussed']} />
         </div>
         <div className="cf-two-col">
-          <Select id="p7" label="Timeline" value={f.timeline} onChange={set('timeline')} options={['ASAP (1–2 weeks)','~1 Month','2–3 Months','3–6 Months','Flexible / No rush']} />
-          <Select id="p8" label="Pages / Complexity" value={f.pages} onChange={set('pages')} options={['1–3 pages (simple)','4–10 pages (standard)','10–20 pages (medium)','20+ pages (large)','Not sure yet']} />
+          <Select id="p7" label="Timeline" value={f.timeline} onChange={setField('timeline')} options={['ASAP (1–2 weeks)','~1 Month','2–3 Months','3–6 Months','Flexible / No rush']} />
+          <Select id="p8" label="Pages / Complexity" value={f.pages} onChange={setField('pages')} options={['1–3 pages (simple)','4–10 pages (standard)','10–20 pages (medium)','20+ pages (large)','Not sure yet']} />
         </div>
         <div className="cf-group">
           <label className="cf-label">Required Features</label>
@@ -192,8 +269,8 @@ function ProjectForm() {
             ))}
           </div>
         </div>
-        <Textarea id="p9" label="Project Description" req placeholder="What does the website need to do? Who is your audience? What problem should it solve?" value={f.desc} onChange={set('desc')} />
-        <Textarea id="p10" label="Design Preferences" rows={3} placeholder="e.g. Modern & minimal, Dark theme, Corporate style. Any reference websites you like?" value={f.design} onChange={set('design')} />
+        <Textarea id="p9" label="Project Description" req placeholder="What does the website need to do? Who is your audience? What problem should it solve?" value={f.desc} onChange={setField('desc')} onBlur={handleBlur('desc')} error={errors.desc} />
+        <Textarea id="p10" label="Design Preferences" rows={3} placeholder="e.g. Modern & minimal, Dark theme, Corporate style. Any reference websites you like?" value={f.design} onChange={setField('design')} />
         <button className="btn-whatsapp-submit" onClick={send}>{WA_BTN_ICON} Send Project Brief via WhatsApp</button>
         <p className="cf-note">Opens WhatsApp with your full project brief pre-filled — Muhammad Afaq receives it instantly.</p>
       </div>
