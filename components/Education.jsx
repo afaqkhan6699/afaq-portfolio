@@ -26,11 +26,11 @@ const education = [
 ];
 
 const certifications = [
-  { title: 'Networks and Network Security', issuer: 'Coursera', icon: '🔒' },
-  { title: 'Microsoft Excel & Word', issuer: 'Coursera', icon: '📊' },
-  { title: 'WordPress Website Development', issuer: 'Coursera', icon: '⬡' },
-  { title: 'HTML, CSS & JavaScript for Web', issuer: 'Coursera', icon: '◈' },
-  { title: 'Introduction to Cybersecurity', issuer: 'Cisco on Campus', icon: '🛡' },
+  { title: 'Networks and Network Security', issuer: 'Coursera', icon: '◉' },
+  { title: 'Microsoft Excel & Word', issuer: 'Coursera', icon: '◉' },
+  { title: 'WordPress Website Development', issuer: 'Coursera', icon: '◉' },
+  { title: 'HTML, CSS & JavaScript for Web', issuer: 'Coursera', icon: '◉' },
+  { title: 'Introduction to Cybersecurity', issuer: 'Cisco on Campus', icon: '◈' },
 ];
 
 export default function Education() {
