@@ -2,8 +2,35 @@ import './globals.css';
 import { ThemeProvider } from '../context/ThemeContext';
 
 export const metadata = {
-  title: 'Muhammad Afaq — WordPress Developer',
-  description: 'Portfolio of Muhammad Afaq — WordPress Developer & Website Designer based in Pakistan.',
+  title: {
+    default: 'Muhammad Afaq | Software Engineer',
+    template: '%s | Muhammad Afaq',
+  },
+  description: 'Muhammad Afaq is a software engineer and WordPress developer building fast, modern websites and web apps.',
+  keywords: [
+    'Muhammad Afaq',
+    'Software Engineer',
+    'WordPress Developer',
+    'Web Developer',
+    'Frontend Developer',
+    'Pakistan',
+  ],
+  authors: [{ name: 'Muhammad Afaq' }],
+  creator: 'Muhammad Afaq',
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    title: 'Muhammad Afaq | Software Engineer',
+    description: 'Software engineer and WordPress developer building fast, modern websites and web apps.',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: 'Muhammad Afaq | Software Engineer',
+    description: 'Software engineer and WordPress developer building fast, modern websites and web apps.',
+  },
 };
 
 export default function RootLayout({ children }) {
