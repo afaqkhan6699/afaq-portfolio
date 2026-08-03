@@ -1,5 +1,5 @@
 import Navbar from '../components/Navbar';
-import Hero from '../components/hero-lab/Hero';
+import Hero from '../components/Hero';
 import About from '../components/About';
 import Skills from '../components/Skills';
 import Experience from '../components/Experience';
@@ -14,8 +14,6 @@ export const metadata = {
 export default function Home() {
   return (
     <>
-      <link rel="preload" as="image" href="/media/img1.webp" />
-      <link rel="preload" as="image" href="/media/img2.webp" />
       <Navbar />
       <main>
         <Hero />
